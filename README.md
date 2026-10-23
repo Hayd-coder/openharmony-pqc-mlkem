@@ -107,7 +107,7 @@ ML-KEM 密钥生成
 ```sh
 git clone https://github.com/Hayd-coder/openharmony-pqc-mlkem.git
 cd openharmony-pqc-mlkem
-make test
+./scripts/verify_package.sh
 make benchmark
 ```
 
@@ -115,14 +115,20 @@ make benchmark
 
 ### 2. 不编译，直接在 DAYU200 上演示界面
 
-从 [v1.0.1 Release](https://github.com/Hayd-coder/openharmony-pqc-mlkem/releases/tag/v1.0.1)
-下载 `PqcMlkemDemo-rk3568-v1.0.1.hap`。电脑需要有 OpenHarmony `hdc`，板卡需要运行兼容的
+从 [v1.0.2 Release](https://github.com/Hayd-coder/openharmony-pqc-mlkem/releases/tag/v1.0.2)
+下载 `PqcMlkemDemo-rk3568-v1.0.2.hap`。电脑需要有 OpenHarmony `hdc`，板卡需要运行兼容的
 OpenHarmony 4.0 Beta2 RK3568 系统：
 
 ```sh
 hdc list targets
-hdc install -r PqcMlkemDemo-rk3568-v1.0.1.hap
+hdc install -r PqcMlkemDemo-rk3568-v1.0.2.hap
 hdc shell aa start -a EntryAbility -b com.example.pqcmlkem
+```
+
+也可以使用仓库提供的安装脚本：
+
+```sh
+HDC_BIN=/path/to/hdc ./scripts/run_board_demo.sh PqcMlkemDemo-rk3568-v1.0.2.hap
 ```
 
 更完整的现场操作见 [`docs/DEMO_GUIDE.md`](docs/DEMO_GUIDE.md)。
@@ -172,6 +178,7 @@ out/rk3568/obj/pqc_mlkem/PqcMlkemDemo.hap
 │   └── signature/              OpenHarmony 公开签名 Profile
 ├── upstream/                   ML-KEM 核心及 AArch64 后端
 ├── results/                    DAYU200 数据和最终截图
+├── scripts/                    完整性检查和板卡安装脚本
 └── docs/                       接入与演示说明
 ```
 

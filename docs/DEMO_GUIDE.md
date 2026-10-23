@@ -5,7 +5,7 @@
 1. 给 DAYU200 接通电源；
 2. 使用数据线连接板卡的 USB 3.0 OTG 口，不要接到普通 Host 口；
 3. 在电脑端准备与板卡系统兼容的 `hdc`；
-4. 从 GitHub Release 下载 `PqcMlkemDemo-rk3568-v1.0.1.hap`。
+4. 从 GitHub Release 下载 `PqcMlkemDemo-rk3568-v1.0.2.hap`。
 
 先确认设备在线：
 
@@ -19,8 +19,14 @@ OTG 数据线；仍无法识别时，可以给板卡完整断电十秒后重启�
 ## 安装并启动
 
 ```sh
-hdc install -r PqcMlkemDemo-rk3568-v1.0.1.hap
+hdc install -r PqcMlkemDemo-rk3568-v1.0.2.hap
 hdc shell aa start -a EntryAbility -b com.example.pqcmlkem
+```
+
+如果已经克隆本仓库，也可以执行：
+
+```sh
+HDC_BIN=/path/to/hdc ./scripts/run_board_demo.sh PqcMlkemDemo-rk3568-v1.0.2.hap
 ```
 
 安装命令出现 `install bundle successfully`，启动命令出现 `start ability successfully`，说明应用
