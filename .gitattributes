@@ -1,0 +1,9 @@
+*.S text eol=lf linguist-language=Assembly
+*.c text eol=lf
+*.h text eol=lf
+*.ets text eol=lf
+*.json text eol=lf
+*.md text eol=lf
+*.csv text eol=lf
+*.jpeg binary
+*.p7b binary

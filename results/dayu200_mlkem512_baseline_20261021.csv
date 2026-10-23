@@ -1,0 +1,4 @@
+implementation,parameter_set,operation,iterations,total_ms,mean_us,operations_per_second
+portable-c,ML-KEM-512,keypair,1000,98.983,98.983,10102.75
+portable-c,ML-KEM-512,encaps,1000,90.415,90.415,11060.12
+portable-c,ML-KEM-512,decaps,1000,85.748,85.748,11662.12

@@ -1,0 +1,40 @@
+{
+  "name": "@ohos/pqc_mlkem",
+  "description": "ML-KEM-512 experiment and benchmark for OpenHarmony RK3568",
+  "version": "1.0.0",
+  "license": "Apache-2.0",
+  "publishAs": "code-segment",
+  "segment": {
+    "destPath": "pqc_mlkem"
+  },
+  "dirs": {},
+  "scripts": {},
+  "component": {
+    "name": "pqc_mlkem",
+    "subsystem": "pqc_mlkem",
+    "syscap": [],
+    "features": [],
+    "adapted_system_type": [
+      "standard"
+    ],
+    "rom": "512KB",
+    "ram": "64KB",
+    "deps": {
+      "components": [
+        "napi"
+      ],
+      "third_party": []
+    },
+    "build": {
+      "sub_component": [
+        "//pqc_mlkem:mlkem_selftest",
+        "//pqc_mlkem:mlkem_benchmark",
+        "//pqc_mlkem:mlkem_selftest_neon",
+        "//pqc_mlkem:mlkem_benchmark_neon",
+        "//pqc_mlkem:pqc_mlkem_demo_hap"
+      ],
+      "inner_kits": [],
+      "test": []
+    }
+  }
+}

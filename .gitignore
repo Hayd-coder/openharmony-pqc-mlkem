@@ -1,0 +1,13 @@
+/build/
+/out/
+*.hap
+*.so
+*.o
+*.a
+*.log
+core
+core.*
+.cache/
+.idea/
+.vscode/
+compile_commands.json

@@ -1,0 +1,165 @@
+import("//build/ohos.gni")
+
+config("mlkem512_config") {
+  include_dirs = [ "upstream" ]
+  defines = [
+    "MLK_CONFIG_PARAMETER_SET=512",
+    "MLK_CONFIG_NAMESPACE_PREFIX=mlkem",
+  ]
+  cflags_c = [
+    "-O3",
+    "-std=c99",
+    "-Wno-unknown-pragmas",
+  ]
+}
+
+config("mlkem512_neon_config") {
+  include_dirs = [ "upstream" ]
+  defines = [
+    "MLK_CONFIG_PARAMETER_SET=512",
+    "MLK_CONFIG_NAMESPACE_PREFIX=mlkem",
+    "MLK_CONFIG_USE_NATIVE_BACKEND_ARITH",
+  ]
+  cflags_c = [
+    "-O3",
+    "-std=c99",
+    "-Wno-unknown-pragmas",
+  ]
+}
+
+# A separately namespaced portable build lets the UI benchmark both methods
+# in the same process without colliding with the NEON implementation symbols.
+config("mlkem512_portable_ui_config") {
+  include_dirs = [ "upstream" ]
+  defines = [
+    "MLK_CONFIG_PARAMETER_SET=512",
+    "MLK_CONFIG_NAMESPACE_PREFIX=mlkem_portable",
+  ]
+  cflags_c = [
+    "-O3",
+    "-std=c99",
+    "-Wno-unknown-pragmas",
+  ]
+}
+
+ohos_static_library("mlkem512") {
+  sources = [
+    "src/randombytes_ohos.c",
+    "upstream/mlkem_native.c",
+  ]
+
+  public_configs = [ ":mlkem512_config" ]
+  subsystem_name = "pqc_mlkem"
+  part_name = "pqc_mlkem"
+}
+
+ohos_static_library("mlkem512_neon") {
+  sources = [
+    "src/randombytes_ohos.c",
+    "upstream/mlkem_native.c",
+    "upstream/src/native/aarch64/src/mlkem_intt_aarch64_asm.S",
+    "upstream/src/native/aarch64/src/mlkem_ntt_aarch64_asm.S",
+    "upstream/src/native/aarch64/src/mlkem_poly_mulcache_compute_aarch64_asm.S",
+    "upstream/src/native/aarch64/src/mlkem_poly_reduce_aarch64_asm.S",
+    "upstream/src/native/aarch64/src/mlkem_poly_tobytes_aarch64_asm.S",
+    "upstream/src/native/aarch64/src/mlkem_poly_tomont_aarch64_asm.S",
+    "upstream/src/native/aarch64/src/mlkem_polyvec_basemul_acc_montgomery_cached_k2_aarch64_asm.S",
+    "upstream/src/native/aarch64/src/mlkem_rej_uniform_aarch64_asm.S",
+  ]
+
+  public_configs = [ ":mlkem512_neon_config" ]
+  subsystem_name = "pqc_mlkem"
+  part_name = "pqc_mlkem"
+}
+
+ohos_static_library("mlkem512_portable_ui") {
+  # Both implementations use the same OpenHarmony /dev/urandom adapter,
+  # which is linked once through mlkem512_neon.
+  sources = [ "upstream/mlkem_native.c" ]
+
+  configs = [ ":mlkem512_portable_ui_config" ]
+  subsystem_name = "pqc_mlkem"
+  part_name = "pqc_mlkem"
+}
+
+ohos_executable("mlkem_selftest") {
+  sources = [ "src/mlkem_selftest.c" ]
+  deps = [ ":mlkem512" ]
+
+  install_enable = true
+  subsystem_name = "pqc_mlkem"
+  part_name = "pqc_mlkem"
+}
+
+ohos_executable("mlkem_benchmark") {
+  sources = [ "src/mlkem_benchmark.c" ]
+  deps = [ ":mlkem512" ]
+
+  install_enable = true
+  subsystem_name = "pqc_mlkem"
+  part_name = "pqc_mlkem"
+}
+
+ohos_executable("mlkem_selftest_neon") {
+  sources = [ "src/mlkem_selftest.c" ]
+  deps = [ ":mlkem512_neon" ]
+
+  install_enable = true
+  subsystem_name = "pqc_mlkem"
+  part_name = "pqc_mlkem"
+}
+
+ohos_executable("mlkem_benchmark_neon") {
+  sources = [ "src/mlkem_benchmark.c" ]
+  deps = [ ":mlkem512_neon" ]
+  defines = [ "MLKEM_BENCHMARK_IMPLEMENTATION=\"aarch64-neon\"" ]
+
+  install_enable = true
+  subsystem_name = "pqc_mlkem"
+  part_name = "pqc_mlkem"
+}
+
+ohos_shared_library("pqc_mlkem_napi") {
+  sources = [ "ui/native/pqc_mlkem_napi.c" ]
+  deps = [
+    ":mlkem512_neon",
+    ":mlkem512_portable_ui",
+  ]
+  external_deps = [ "napi:ace_napi" ]
+
+  # Application-local NAPI modules are loaded by their literal lib*.so name.
+  output_extension = "so"
+  relative_install_dir = "module"
+  subsystem_name = "pqc_mlkem"
+  part_name = "pqc_mlkem"
+}
+
+ohos_hap("pqc_mlkem_demo_hap") {
+  hap_profile = "ui/entry/src/main/module.json"
+  deps = [
+    ":pqc_mlkem_demo_js_assets",
+    ":pqc_mlkem_demo_resources",
+  ]
+  shared_libraries = [ ":pqc_mlkem_napi" ]
+  certificate_profile = "ui/signature/pqc_mlkem_demo.p7b"
+  hap_name = "PqcMlkemDemo"
+  subsystem_name = "pqc_mlkem"
+  part_name = "pqc_mlkem"
+  module_install_dir = "app/com.example.pqcmlkem"
+}
+
+ohos_js_assets("pqc_mlkem_demo_js_assets") {
+  ets2abc = true
+  source_dir = "ui/entry/src/main/ets"
+}
+
+ohos_app_scope("pqc_mlkem_demo_app_profile") {
+  app_profile = "ui/AppScope/app.json"
+  sources = [ "ui/AppScope/resources" ]
+}
+
+ohos_resources("pqc_mlkem_demo_resources") {
+  sources = [ "ui/entry/src/main/resources" ]
+  deps = [ ":pqc_mlkem_demo_app_profile" ]
+  hap_profile = "ui/entry/src/main/module.json"
+}

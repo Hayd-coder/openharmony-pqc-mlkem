@@ -1,0 +1,16 @@
+{
+  "string": [
+    {
+      "name": "module_desc",
+      "value": "ML-KEM-512 后量子密码演示"
+    },
+    {
+      "name": "ability_desc",
+      "value": "在 DAYU200 上演示 ML-KEM 密钥封装与 NEON 优化"
+    },
+    {
+      "name": "ability_label",
+      "value": "PQC 演示"
+    }
+  ]
+}

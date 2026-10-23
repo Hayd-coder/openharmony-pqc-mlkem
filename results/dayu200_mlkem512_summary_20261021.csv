@@ -1,0 +1,4 @@
+operation,portable_mean_us,portable_stddev_us,neon_mean_us,neon_stddev_us,latency_reduction_percent,speedup
+keypair,79.003,0.605,58.313,0.133,26.19,1.355
+encaps,91.054,0.213,65.254,0.164,28.34,1.395
+decaps,86.547,0.154,56.544,0.047,34.67,1.531
