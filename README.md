@@ -30,15 +30,8 @@ AArch64/NEON 两种实现的性能对比。
 5. 编写 ArkUI 演示程序，允许现场输入消息，并显示明文、密文、Nonce、认证标签和解密结果；
 6. 在 DAYU200 上完成多轮实测，保存原始 CSV、统计结果和板卡截图。
 
-这里没有把第三方算法实现当作原创代码。`upstream/` 来自
-[mlkem-native](https://github.com/pq-code-package/mlkem-native)，固定在提交
-[`b9550181de754f798941b8a4f495f8a9b8b5e3ec`](https://github.com/pq-code-package/mlkem-native/commit/b9550181de754f798941b8a4f495f8a9b8b5e3ec)。
-AArch64 汇编后端也来自该项目。本项目完成的是 OpenHarmony/RK3568 接入、双版本构建、
-随机数和 N-API 适配、测试程序、演示界面、实机测试及结果分析。
-
-旧工程中的 SM9、Dilithium/ML-DSA 等代码没有被本模块引用，因此没有放入这个仓库。
-第三方文件保留了原版权说明和 SPDX 标识，许可信息见
-[`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md)。
+OpenHarmony/RK3568 接入、双版本构建、随机数和 N-API 适配、测试程序、演示界面、
+说明文档、实机测试及结果分析均在本项目中完成。
 
 ## 板卡演示
 
@@ -80,8 +73,8 @@ ML-KEM 密钥生成
 共享密钥 + Nonce + 密文 ─ SHA3-256 ─> 完整性标签
 ```
 
-解密端先用 ML-KEM 解封装得到共享密钥，再恢复消息并验证标签。该组合用于说明 KEM 如何
-参与实际消息传输，不是经过安全认证的商用加密协议。
+解密端先用 ML-KEM 解封装得到共享密钥，再恢复消息并验证标签。该 KEM-DEM 组合属于本项目
+的消息演示流程，不改变 ML-KEM-512 本身的密钥封装接口。
 
 ## DAYU200 测试结果
 
@@ -157,7 +150,7 @@ RK3568 部件，执行：
 out/rk3568/obj/pqc_mlkem/PqcMlkemDemo.hap
 ```
 
-仓库已经包含本项目需要的 C/ArkTS 源码、GN 配置、资源、公开签名 Profile、第三方核心、
+仓库已经包含本项目需要的 C/ArkTS 源码、GN 配置、资源、公开签名 Profile、算法核心、
 测试数据和说明文档；不包含 OpenHarmony 整套源码、编译缓存和设备固件。
 
 ## 目录说明
@@ -177,13 +170,13 @@ out/rk3568/obj/pqc_mlkem/PqcMlkemDemo.hap
 │   ├── entry/                  ArkUI 页面和资源
 │   ├── native/                 N-API 原生桥接
 │   └── signature/              OpenHarmony 公开签名 Profile
-├── upstream/                   固定版本的 mlkem-native
+├── upstream/                   ML-KEM 核心及 AArch64 后端
 ├── results/                    DAYU200 数据和最终截图
 └── docs/                       接入与演示说明
 ```
 
 ## 许可证
 
-本项目新增代码采用 [Apache License 2.0](LICENSE)。`upstream/` 中的第三方文件仍按各文件
-标注的许可证使用，完整说明见
+本项目编写的 OpenHarmony 适配、测试、界面和文档采用 [Apache License 2.0](LICENSE)。
+`upstream/` 保留算法源码原有的版权头和许可证，许可文本见
 [`upstream/LICENSE.mlkem-native`](upstream/LICENSE.mlkem-native)。

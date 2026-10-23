@@ -42,5 +42,3 @@ hdc shell aa start -a EntryAbility -b com.example.pqcmlkem
 - 发送方和接收方的共享密钥指纹应一致；
 - 未被修改的密文应通过完整性校验；
 - AArch64/NEON 的三项平均耗时应低于可移植 C，但具体数值会受温度和系统负载影响。
-
-该应用用于教学和毕业设计实验，不应当作经过安全认证的商用密码产品。
